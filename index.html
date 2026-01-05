@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>The Lemon Pig Protocol</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- ES Module Shims: Fixes import map support on mobile/older browsers -->
+    <script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
+
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <!-- Landing Page -->
+    <div id="landing-page">
+        <div class="landing-content">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-yellow-600 mb-2 drop-shadow-sm">THE LEMON PIG PROTOCOL</h1>
+            <p class="text-xl font-bold text-yellow-800 italic mb-6">Citrus. Luck. Chaos.</p>
+            
+            <img src="https://i.ibb.co/rRCFXGZR/lemon-pig-1.png" alt="Glorious Lemon Pig" class="hero-img">
+            
+            <p class="text-gray-600 mt-4 mb-4">
+                The ancients knew the power of the ellipsoid fruit. Now, the power is yours.<br>
+                Construct the swine of fortune. Beckon the New Year.
+            </p>
+
+            <button id="btn-start" class="cta-btn">Start Building</button>
+
+            <div style="margin-bottom: 20px;">
+                <!-- LikeBtn.com BEGIN -->
+                <span class="likebtn-wrapper" data-theme="github" data-lang="en" data-identifier="lemonpig_landing_page">Loading Likes...</span>
+                <script>
+                    // The LikeBtn widget attempts to load resources using the same protocol as the page.
+                    // When running locally (file://), this fails. We detect this and show a message.
+                    if (window.location.protocol === "file:") {
+                        document.querySelector(".likebtn-wrapper").innerHTML = "<small style='color:#6b7280'>(Likes widget requires a web server)</small>";
+                    } else {
+                        (function(d,e,s){if(d.getElementById("likebtn_wjs"))return;a=d.createElement(e);m=d.getElementsByTagName(e)[0];a.async=1;a.id="likebtn_wjs";a.src=s;m.parentNode.insertBefore(a, m)})(document,"script","https://w.likebtn.com/js/w/widget.js");
+                    }
+                </script>
+                <!-- LikeBtn.com END -->
+                
+                <!-- View Counter -->
+                <div style="margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                    <span class="text-gray-600 font-bold">Views:</span>
+                    <script type="text/javascript" src="https://counter.websiteout.com/js/28/0/0/0"></script>
+                </div>
+            </div>
+
+            <div class="explainer-section">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">What is a Lemon Pig?</h2>
+                <p class="mb-4">
+                    A Lemon Pig is a traditional New Year's charm made from a lemon, toothpicks, and a lucky coin. 
+                    It ensures prosperity, or at the very least, provides a Vitamin C-rich companion for your desk.
+                </p>
+                <img src="https://i.ibb.co/zHQTVBG0/not-a-meme-i-made-a-piglet-though-yall-enjoy-may-want-to-v0-jkfwmz07an9c1.webp" alt="Lemon Pig Diagram" class="lore-img">
+                <p class="text-sm">
+                    <i>Fig 1. A historical specimen observed in the wild. Note the tinfoil tail aerodynamics.</i>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- UI Elements (Initially Hidden) -->
+    <div id="instructions">Select a tool to start building</div>
+    <div id="menu-toggle" title="Toggle Menu">☰</div>
+    <div id="info-btn" title="About">i</div>
+    <div id="toast"></div>
+
+    <!-- Right Side Tool Panel (Collapsible) -->
+    <div id="ui-container">
+        
+        <!-- Stage 1: Preparation -->
+        <div id="stage-prep" class="stage-pane active">
+            <div class="stage-title">1. Preparation</div>
+            <div class="stage-desc">Start by preparing your lemon base.</div>
+            
+            <div class="control-row">
+                <span class="control-label">Remove Snout</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="toggle-snout">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="control-row">
+                <span class="control-label">🌀 Tinfoil Tail</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="toggle-tail">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Stage 2: Legs -->
+        <div id="stage-legs" class="stage-pane">
+            <div class="stage-title">2. Legs</div>
+            <div class="stage-desc">Stick toothpicks in to help it stand.</div>
+            <div class="slider-container">
+                <div class="slider-label"><span>Toothpick Length</span> <span id="leg-len-val">0.8</span></div>
+                <input type="range" id="leg-length" min="0.3" max="1.5" step="0.1" value="0.8">
+            </div>
+            <button class="btn" id="tool-leg" data-tool="leg">
+                <span>🪵 Place Legs</span>
+            </button>
+        </div>
+
+        <!-- Stage 3: Ears -->
+        <div id="stage-ears" class="stage-pane">
+            <div class="stage-title">3. Ears</div>
+            <div class="stage-desc">Cut custom shapes from peel.</div>
+            
+            <button class="btn" id="open-ear-editor">
+                <span>✂️ Design Ear Shape</span>
+            </button>
+            
+            <button class="btn" id="tool-ear" data-tool="ear" disabled>
+                <span>👂 Place Custom Ear</span>
+            </button>
+
+            <div class="slider-container mt-2">
+                <div class="slider-label"><span>Ear Lift</span> <span id="ear-lift-val">30°</span></div>
+                <input type="range" id="ear-lift" min="0" max="90" step="5" value="30">
+            </div>
+        </div>
+
+        <!-- Stage 4: Face (Eyes + Coin) -->
+        <div id="stage-face" class="stage-pane">
+            <div class="stage-title">4. Face & Prosperity</div>
+            <div class="stage-desc">Add eyes and the lucky coin.</div>
+            
+            <button class="btn" id="tool-eye" data-tool="eye">
+                <span>👀 Place Clove Eyes</span>
+            </button>
+            <div class="slider-container mb-4">
+                <div class="slider-label"><span>Clove Size</span> <span id="clove-size-val">1.0</span></div>
+                <input type="range" id="clove-size" min="0.5" max="2.0" step="0.1" value="1.0">
+            </div>
+            
+            <div class="border-t pt-4">
+                <button class="btn" id="tool-coin" data-tool="coin">
+                    <span>🪙 Insert Lucky Coin</span>
+                </button>
+                <div class="slider-container">
+                    <div class="slider-label"><span>Coin Angle</span> <span id="coin-rot-val">0°</span></div>
+                    <input type="range" id="coin-rotation" min="0" max="90" step="1" value="0">
+                </div>
+            </div>
+        </div>
+
+        <!-- Stage 5: Finish -->
+        <div id="stage-decor" class="stage-pane">
+            <div class="stage-title">5. Decoration</div>
+            <div class="stage-desc">Draw final touches on the skin.</div>
+            
+            <button class="btn" id="tool-draw" data-tool="draw">
+                <span>🖊️ Draw on Skin</span>
+            </button>
+            
+            <div id="draw-options" class="hidden">
+                <div class="toggle-switch">
+                    <div class="toggle-option selected" id="mode-draw">🖌️ Draw</div>
+                    <div class="toggle-option" id="mode-move">✋ Move</div>
+                </div>
+
+                <div class="color-row">
+                    <div class="color-dot bg-black selected" data-color="#000000"></div>
+                    <div class="color-dot bg-red-500" data-color="#ef4444"></div>
+                    <div class="color-dot bg-blue-500" data-color="#3b82f6"></div>
+                    <button class="btn-icon w-8 h-8 text-sm" id="btn-eraser" title="Eraser">🧽</button>
+                    <!-- Native Color Picker -->
+                    <input type="color" id="custom-color-picker" value="#000000" title="Custom Color">
+                </div>
+            </div>
+            <div class="mt-6 border-t pt-4">
+                <button class="btn btn-celebrate" id="btn-finish">✨ DONE! ✨</button>
+            </div>
+        </div>
+
+        <!-- Stage 6: Celebrate -->
+        <div id="stage-celebrate" class="stage-pane">
+            <div class="stage-title text-center text-2xl">🎉 Hooray! 🎉</div>
+            <div class="stage-desc text-center">Your Lemon Pig is ready to bring good luck!</div>
+            
+            <button class="btn btn-action mb-2" id="share-btn">
+                📤 Share with Friends
+            </button>
+            <button class="btn mb-2" id="take-photo">
+                📸 Download Photo
+            </button>
+            <p class="text-xs text-center text-gray-400 mt-4">Pan around to enjoy the confetti!<br><strong>Tip:</strong> Tug the tail for a fortune.</p>
+        </div>
+
+    </div>
+
+    <!-- Undo/Redo (Moved to bottom left) -->
+    <div id="history-container">
+        <button class="btn-icon" id="btn-undo" title="Undo (Z)">↩️</button>
+        <button class="btn-icon" id="btn-redo" title="Redo (Y)">↪️</button>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div id="bottom-bar">
+        <div class="stage-nav">
+            <button class="nav-btn" id="prev-stage">←</button>
+            <div class="stage-dots" id="stage-dots"></div>
+            <button class="nav-btn" id="next-stage">→</button>
+        </div>
+    </div>
+
+    <!-- Ear Editor Modal -->
+    <div id="ear-modal" class="modal-overlay">
+        <div class="modal-card" id="ear-editor">
+            <h3 class="text-lg font-bold text-gray-700">Draw Ear Shape</h3>
+            <p class="text-sm text-gray-500">Draw a continuous loop.</p>
+            <canvas id="ear-canvas" width="300" height="300"></canvas>
+            <div class="flex gap-2 justify-center">
+                <button class="btn" id="cancel-ear">Cancel</button>
+                <button class="btn btn-action" id="save-ear">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="info-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h2 class="text-xl font-bold text-yellow-600 mb-2">About Lemon Pigs</h2>
+            <p class="text-sm text-gray-600 mb-4 text-left">
+                Lemon pigs are a traditional New Year's craft believed to bring good luck and prosperity. 
+                Typically made with a lemon, toothpick legs, and a coin in the mouth!
+            </p>
+            <div class="text-xs text-gray-400 mb-6">
+                Built with Three.js<br>
+                For the Lemon Lovers
+            </div>
+            <button class="btn" id="close-info">Close</button>
+        </div>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
